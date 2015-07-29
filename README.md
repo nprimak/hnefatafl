@@ -1,11 +1,11 @@
-# [Play Hnefatafl Online] 
+# [Play Hnefatafl Online] (http://www.play-hnefatafl.com)
 
 
 By [Nadya Primak] (http://www.nadyaprimak.com).
 
 
 ## Description
-**Play Hnefatafl Online** can be found at [http://www.play-hnefatafl.com]. The board is drawn onto an HTML5 Canvas Element and updated with Javascript. For playing online, player information is temporarily stored to a MYSQL database (allowing users to play without needing to create an account). AJAX is used to keep tabs on player presence and turn while PHP is used to interact with the database. 
+**Play Hnefatafl Online** can be found here (http://www.play-hnefatafl.com). The board is drawn onto an HTML5 Canvas Element and updated with Javascript. For playing online, player information is temporarily stored to a MYSQL database (allowing users to play without needing to create an account). AJAX is used to keep tabs on player presence and turn while PHP is used to interact with the database. 
 
 
 
@@ -33,5 +33,5 @@ send a pull request.
 
 ## Authors
 
-* Nadya Primak (Your Github URL goes here)
+* Nadya Primak (https://github.com/nprimak/)
 
