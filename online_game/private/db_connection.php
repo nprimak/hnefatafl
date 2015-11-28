@@ -1,7 +1,7 @@
 <?php
     define('DB_SERVER', 'mysql.play-hnefatafl.com');
     define('DB_USER', 'nadyaprimakcom');
-    define('DB_PASS', 'Alatecra6');
+    define('DB_PASS', '*******');
     define('DB_NAME', 'hnefatafl');
 
 
