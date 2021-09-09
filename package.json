@@ -1,0 +1,43 @@
+{
+  "name": "play-hnefatafl.com",
+  "version": "1.0.0",
+  "description": " multiplayer ancient viking board game",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.17.1",
+    "http": "^0.0.1-security",
+    "socket.io": "^2.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/nprimak/hnefatafl.git"
+  },
+  "keywords": [
+    "Hnefatafl",
+    "Tafl",
+    "Viking",
+    "Ancient",
+    "Board",
+    "Game",
+    "Kings",
+    "Table",
+    "Scandinavian",
+    "Chess",
+    "Games",
+    "Like",
+    "Chess",
+    "Games",
+    "Like",
+    "Checkers"
+  ],
+  "author": "Nadya Primak",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/nprimak/hnefatafl/issues"
+  },
+  "homepage": "https://github.com/nprimak/hnefatafl#readme"
+}
