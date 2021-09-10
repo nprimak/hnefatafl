@@ -33,8 +33,6 @@ function handleGameOver(gameOverData) {
     displayFinalMessage(data.winner, data.gameovermessage)
 }
 
-//window.onload = drawSquares;
-
 
 function drawSquares(){
     ctx.lineWidth=1;
@@ -199,10 +197,6 @@ function movePiece(x,y,currentpiece){
     }
     boardArr[oldy][oldx] = 0;
     socket.emit('newTurn', JSON.stringify({boardArr}));
-    // checkCapture(x,y);
-    // drawSquares();
-    // drawPieces();
-    // checkGameOver();
     pieceselected = false;
     
 }

@@ -17,6 +17,7 @@ function createBoardArray(){
      return boardArr;     
  }
 
+ // deleted part of if statement that was checking x and y coordinates.. not sure why that was there
  function checkCapture(boardArr, turn){
     for(i = 0; i <= 10 ; i++){
         for(j=0; j <=10 ; j++) { 
