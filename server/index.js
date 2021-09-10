@@ -1,5 +1,5 @@
 const io = require('socket.io')();
-const {createBoardArray} = require('./game')
+const {createBoardArray, checkCapture, checkGameOver} = require('./game')
 
 
 io.on('connection', client => {
@@ -8,19 +8,31 @@ io.on('connection', client => {
         turn: "black",
     }
 
-    startGameTurns(client, state)
+    client.emit('gameStart', JSON.stringify(state))
+    client.on('newTurn', handleTurn)
+
+    function handleTurn(data) {
+        console.log("boardArr", JSON.parse(data).boardArr);
+        state.boardArray = JSON.parse(data).boardArr; 
+
+
+        const gameoverData = checkGameOver(state.boardArray);
+        console.log("gameover", gameoverData);
+
+        if(!gameoverData.gameover) {
+            if(state.turn === "black"){
+                state.turn = "white"
+            } else {
+                state.turn = "black"
+            }
+            state.boardArray = checkCapture(state.boardArray, state.turn)
+            client.emit('boardUpdate', JSON.stringify(state))
+        } else {
+            client.emit('gameOver', JSON.stringify(gameoverData))
+        }
+    }
     
 });
-
-function startGameTurns(client, state) {
-    const winner = gameLoop(state)
-
-    if(!winner) {
-        client.emit('gameState', JSON,stringiy(state))
-    } else {
-        client.emit('gameOver')
-    }
-}
 
 io.listen(3000)
 
