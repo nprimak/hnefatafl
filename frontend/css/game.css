@@ -34,7 +34,7 @@ h1 a{
             position:relative;
         }
         #stage { 
-            display:inline;
+            display:none;
             position:relative;
             border: 2px black solid;
             float:left;
@@ -63,6 +63,23 @@ h1 a{
             margin-top: 0;
             line-height: 30px;
         }
+        #center button {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            width: 200px;
+            font-weight: bold;
+            text-transform: uppercase;
+            padding: 10px;
+            background-color: #ffd266;
+            border-width:0px;
+            border-radius: 5px;
+        }
+
+        #center button:hover {
+            background-color: #d37f35;
+            cursor: pointer;
+        }
+
         #center h1{
             padding-top:15px;
             font-size: 50px;
@@ -95,6 +112,15 @@ h1 a{
     padding-left:20px;
     padding-right:20px;
 }
+
+        #waiting {
+            color:rgba(242, 192, 64);
+            text-align:center;
+        }
+
+        #waiting h3{ 
+            text-align:center;
+        }
 
         #player1 {
             display:inline;

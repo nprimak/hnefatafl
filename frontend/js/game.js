@@ -1,10 +1,36 @@
 
 const socket = io('http://localhost:3000');
 
-socket.on('gameStart', handleBoardUpdate)
+socket.on('init', handleInit)
+socket.on('gameCode', handleGameCode)
+socket.on('unknownGame', handleUnknownGame)
+socket.on('tooManyPlayers', handleTooManyPlayers)
+socket.on('gameStart', handleBoardStart)
 socket.on('boardUpdate', handleBoardUpdate)
 socket.on('gameOver', handleGameOver)
 
+const joinGameBtn = document.getElementById('join-game')
+const createGameBtn = document.getElementById('create-game')
+const roomCodeInput = document.getElementById('room-code')
+const initialScreen = document.getElementById('center')
+const startScreen = document.getElementById('start')
+const roomCodeIdDisplay = document.getElementById('room-code-id')
+const waitingScreen = document.getElementById('waiting')
+
+joinGameBtn.addEventListener('click', joinGame)
+createGameBtn.addEventListener('click', newGame)
+
+function newGame() {
+    socket.emit('newGame');
+}
+
+function joinGame() {
+    const code = roomCodeInput.value;
+    socket.emit('joinGame', code);
+}
+
+let startGameCode; 
+let playerNumber;
 let boardArr; //array holding all current locations of pieces
 let turn;
 var firstload = true;
@@ -18,11 +44,50 @@ var currentpiece; //coordinates of piece which is currentl selected
 var round = 1;
 var gameover = false;
 
+function showWaitingScreen() {
+    waitingScreen.style.display = "inline"
+    startScreen.style.display = "none"
+}
 
-function handleBoardUpdate(state) {
-    boardArr = JSON.parse(state).boardArray;
-    console.log("boardUpdate", boardArr);
-    turn = JSON.parse(state).turn;
+
+function showGameScreen() {
+    initialScreen.style.display = 'none';
+    stage.style.display = 'inline';
+}
+
+function handleInit(number) {
+    playerNumber = number;
+}
+
+function handleGameCode(gameCode) {
+    roomCodeIdDisplay.innerText = gameCode;
+    showWaitingScreen();
+}
+
+function handleUnknownGame() {
+    reset()
+    alert("Unknown Game Code")
+}
+
+function handleTooManyPlayers() {
+    reset()
+    alert("Game Already in Progress")
+}
+
+function handleBoardStart(gameData) {
+    showGameScreen();
+    handleBoardUpdate(gameData);
+}
+
+function handleBoardUpdate(gameData) {
+    console.log("received game start")
+    const data = JSON.parse(gameData);
+    console.log("data", data);
+    console.log("gamecode", data.roomName);
+    startGameCode = data.roomName; 
+    boardArr = data.boardArray;
+    console.log("boardArr", boardArr);
+    turn = data.turn;
     drawSquares()
     drawPieces()
 }
@@ -196,7 +261,7 @@ function movePiece(x,y,currentpiece){
         //boardArr[oldy][oldx] = 0;
     }
     boardArr[oldy][oldx] = 0;
-    socket.emit('newTurn', JSON.stringify({boardArr}));
+    socket.emit('newTurn', JSON.stringify({boardArray: boardArr, roomName: startGameCode}));
     pieceselected = false;
     
 }
@@ -377,6 +442,15 @@ function displayFinalMessage(message,winner){
     ctx.fillText("Winner is "+winner+"!", 35,350);
     stage.removeEventListener("click", selectPiece);
 
+}
+
+function reset() {
+    playerNumber = null;
+    roomCodeInput.value = "";
+    roomCodeIdDisplay.innerText = "";
+    initialScreen.style.display = 'inline';
+    waitingScreen.style.display = 'none';
+    startScreen.style.dispkay = 'inline';
 }
 
 
