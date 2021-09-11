@@ -29,6 +29,8 @@ function joinGame() {
     socket.emit('joinGame', code);
 }
 
+screen.orientation.lock('portrait')
+
 let startGameCode; 
 let playerNumber;
 let boardArr; //array holding all current locations of pieces
@@ -36,9 +38,9 @@ let turn;
 var firstload = true;
 var stage = document.getElementById("stage");
 var ctx = stage.getContext("2d");
-var padding = stage.width/24; //padding around canvas
 stage.width = document.body.clientWidth;
-stage.height = 360;
+var padding = stage.width/22; //padding around canvas
+stage.height = 320;
 var squaresize = stage.width/11; //size of the squares on the board
 var piecesize = squaresize/2.4; //the radius of the checkers
 var pieceselected = false; //whether a piece is currently selected or not
@@ -167,7 +169,7 @@ function drawPieces(){
             //    ctx.beginPath();
                 ctx.moveTo(0+j*squaresize+9, 0+i*squaresize+squaresize/2);
                 ctx.lineTo(0+j*squaresize+squaresize-9,0+i*squaresize+squaresize/2);
-                ctx.lineWidth=7;
+                ctx.lineWidth=3;
                 ctx.strokeStyle = 'red';
                 ctx.stroke();
                 
@@ -453,8 +455,8 @@ function displayFinalMessage(message,winner){
     ctx.fillText(message, 60, 250);
     ctx.font = "700 60pt IM Fell English";
     ctx.lineWidth = 4;
-    ctx.strokeText("Winner is "+winner+"!", 35,350);
-    ctx.fillText("Winner is "+winner+"!", 35,350);
+    ctx.strokeText("Winner is "+winner+"!", 35,100);
+    ctx.fillText("Winner is "+winner+"!", 35,100);
     stage.removeEventListener("click", selectPiece);
 
 }
