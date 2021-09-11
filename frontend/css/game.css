@@ -35,10 +35,11 @@ h1 a{
             position:relative;
         }
         #stage { 
-            display:none;
             position:relative;
             border: 2px black solid;
-            float:left;
+            text-align: center;
+            margin: 0 auto;
+            display:block;
             
         }
 
@@ -142,11 +143,16 @@ h1 a{
         }
 
         .sidebar h2{
-            margin-top: 25px;
+            margin-top: 15px;
+            max-width: 100px;
         }
 
         #player1 .update {
             float: right;
+        }
+
+        #player1 h2 {
+            float: left;
         }
 
         #player2 .avatar{
@@ -155,6 +161,7 @@ h1 a{
 
         #player2 h2 {
             float: right;
+            text-align: right;
         }
 
         #player2 .update {
@@ -237,9 +244,13 @@ h1 a{
 
         .update {
             color: #A14D34;
-            font-size: 25pt;
+            font-size: 1.5rem;
             text-transform: uppercase;
             font-family: 'IM Fell English', serif;
+            padding-right: 10px;
+            padding-left: 10px;
+            margin-top: 10px;
+            width:100px
         
         }
         #hidden-table{

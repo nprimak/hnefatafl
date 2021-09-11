@@ -36,8 +36,10 @@ let turn;
 var firstload = true;
 var stage = document.getElementById("stage");
 var ctx = stage.getContext("2d");
+var padding = stage.width/24; //padding around canvas
+stage.width = document.body.clientWidth;
+stage.height = 360;
 var squaresize = stage.width/11; //size of the squares on the board
-var padding = 27; //padding around canvas
 var piecesize = squaresize/2.4; //the radius of the checkers
 var pieceselected = false; //whether a piece is currently selected or not
 var currentpiece; //coordinates of piece which is currentl selected
