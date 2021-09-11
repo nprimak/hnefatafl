@@ -38,7 +38,11 @@ let turn;
 var firstload = true;
 var stage = document.getElementById("stage");
 var ctx = stage.getContext("2d");
-stage.width = document.body.clientWidth;
+if( document.body.clientWidth > 320) {
+    stage.width = 320;
+} else {
+    stage.width = document.body.clientWidth;
+}
 var padding = stage.width/22; //padding around canvas
 stage.height = 320;
 var squaresize = stage.width/11; //size of the squares on the board
@@ -56,7 +60,7 @@ function showWaitingScreen() {
 
 function showGameScreen() {
     initialScreen.style.display = 'none';
-    stage.style.display = 'inline';
+    stage.style.display = 'block';
 }
 
 function handleInit(number) {
