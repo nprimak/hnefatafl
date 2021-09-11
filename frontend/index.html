@@ -12,6 +12,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         <meta name="keywords" content="Hnefatafl, Tafl, Viking, Ancient, Board Game, Kings, Table, Scandinavian, Chess, Games Like Chess, Games Like Checkers">
         <meta name="author" content="Nadya Primak">
          <link rel="icon" href="./images/favicon2.ico" type="image/gif" sizes="16x16"> 
+         <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HNEFATAFL</title>
         <link href='http://fonts.googleapis.com/css?family=IM+Fell+English' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="./css/game.css">
@@ -38,7 +39,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div id="container">
         <div id="canvas-container">
             <div id="topbar">
-                 <header><h1><a href="./home.html">the game of hnefatafl</a></h1></header>
+                 <header><h1><a href="./home.html">hnefatafl</a></h1></header>
             </div>
             <div id="player1" class="sidebar">
                 <div class="avatar">
@@ -55,14 +56,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                    
                 </div>
                 <div id="start">
-                    <button id="create-game">Create New Game</button></br>
+                    <button id="create-game" class="btn">Create New Game</button></br>
                     <span>OR</span></br></br>
                     <input id="room-code" type="text" placeholder="Enter Room Code"/></br>
-                    <button id="join-game">Join Existing Game</button>
+                    <button id="join-game" class="btn">Join Existing Game</button>
                 </div>
             
             </div>
-            <canvas id="stage" width="600" height="600">Your browser does not support HTML5 Canvas Element.     </canvas>
+            <canvas id="stage" width="400" height="400">Your browser does not support HTML5 Canvas Element.     </canvas>
             <div id="player2" class="sidebar">
                 <div class="update"></div>
                 <div class="avatar">
