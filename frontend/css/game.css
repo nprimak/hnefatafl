@@ -1,15 +1,16 @@
         body {
-            background: url(../images/tiledbg.png);
-            background-repeat: repeat;
+            background-color:black;
             font-family:sans-serif;
             background-position: top;
+            margin: 0px;
+            padding: 0px;
         }
         h1{
             font-family: 'IM Fell English', serif;
              text-transform:uppercase;  
             font-size: 37px;
             padding:0;
-            margin:15;
+            margin:10px;
             color: #D8A46B;
             
      
@@ -39,6 +40,12 @@ h1 a{
             border: 2px black solid;
             float:left;
             
+        }
+
+        #start span {
+            color: burlywood;
+            font-family:  'IM Fell English', serif;
+            font-size: 30px;
         }
         #center a{
             font-size: 40px;
@@ -90,10 +97,10 @@ h1 a{
             float:left;
             height: 600px;
             overflow-y:scroll;
-            width:600px;
+            width:100%;
             text-align:center;
             background: url(../images/background_darker.jpg);
-            background-size: 600px 600px;
+            background-size: 100%;
         }
 
 #center p{
@@ -122,33 +129,37 @@ h1 a{
             text-align:center;
         }
 
-        #player1 {
+       .sidebar {
             display:inline;
             font-family: sans-serif;
             font-size: 15px;
             font-weight: bold;
             float:left;
             word-wrap: break-word;
-            width:150px;
-            height: 610px;
-            padding-left: 15px;
-            margin: 0 auto;
-            background: url(../images/side1_new.png);
-            background-size: 150px 620px;
+            width: 100%;
+            height: 85px;
+            margin: 0px;
+            background-color:sandybrown;
         }
-        #player2 {
-            display:inline;
-            font-family: sans-serif;
-            font-size: 15px;
-            font-weight: bold;
-            float:left;
-            word-wrap: break-word;
-            text-align:left;
-            width:150px;
-            height: 610px;
-            padding-left: 15px;
-             background: url(../images/side2_new.png);
-             background-size: 150px 620px;
+
+        .sidebar h2{
+            margin-top: 25px;
+        }
+
+        #player1 .update {
+            float: right;
+        }
+
+        #player2 .avatar{
+            float: right;
+        }
+
+        #player2 h2 {
+            float: right;
+        }
+
+        #player2 .update {
+            float: left; 
         }
   
         .avatar img{
@@ -156,19 +167,18 @@ h1 a{
             height:120px;
         }
         .avatar {
-            height:140px;
-            width:120px;
-            border: 2px solid #A14D34;
+            height: 70px;
             background-color: #A14D34;
             color: #d0975e;
-            text-align:center;
-            font-weight:normal;
+            text-align: center;
+            font-weight: normal;
             font-size: 10pt;
-            
-        }
-        .avatar p {
-            padding-top:5px;
-            margin:0;
+            border-radius: 100%;
+            width: 70px;
+            float: left;
+            margin-top: 6px;
+            margin-left: 10px;
+            margin-right: 10px;        
         }
         #topleft{
             float:left;
@@ -178,29 +188,32 @@ h1 a{
             height: 70px;
         }
         header {
-            width:605px;
-            float:left;
+            width:100%;
             height:70px;
             background: url(../images/midde_top_header_bg.png);
             padding:0;
             text-align:center;
+            box-sizing: border-box;
+            border: 5px solid #D8A46B;
 
         }
         footer {
             float:left;
-            width:605px;
+            width:100%;
             height:70px;
             color: #D8A46B;
-            line-height:77px;
+            line-height:60px;
             font-size:40px;
             text-align:center;
             background: url(../images/middle_bottom_footer_bg.png);
+            box-sizing: border-box;
+            border: 5px solid #D8A46B;
         }
 
         footer a{
             color: #D8A46B;
             text-decoration: none;
-            padding-top:20px;
+            padding-top:10px;
             padding-left: 50px;
             padding-right:50px;
              font-family: 'IM Fell English', serif;
@@ -208,16 +221,14 @@ h1 a{
 
 }
         #topbar{
-            top:0; 
-            width: 925px;
-            border: 5px solid #D8A46B;
+            top:0px; 
+            max-width: 100%;
         }
         #bottombar{
-            border: 5px solid #D8A46B;
            display:inline-block;
             left: 0px;
             margin-top: -5;
-            width:925px;
+            width: 100%;
         }
         #bottomleft{
          float:left;
