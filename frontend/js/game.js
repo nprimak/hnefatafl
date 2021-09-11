@@ -183,14 +183,15 @@ function selectPiece(event){
     var y = coord[1];
     var xcell = Math.floor(x/squaresize) ;
     var ycell = Math.floor(y/squaresize) ;
+    console.log("select piece function player number", playerNumber);
     //console.log(xlocation);
     //console.log(ylocation);
     if(pieceselected == false){
         currentpiece = [xcell,ycell];
-        if(turn === "black" && boardArr[ycell][xcell] == 1 ){
+        if(turn === "black" && (playerNumber === 1) && boardArr[ycell][xcell] == 1 ){
             highlightPath(xcell,ycell);
         }
-        if(turn === "white"){
+        if(turn === "white" && playerNumber === 2){
             if(boardArr[ycell][xcell] == 2){
                 highlightPath(xcell,ycell);
             }
@@ -210,10 +211,10 @@ function selectPiece(event){
                 xcell = Math.floor(x/squaresize) ;
                 ycell = Math.floor(y/squaresize) ;
                 currentpiece = [xcell,ycell];
-                if(turn === "black" && boardArr[ycell][xcell] == 1 ){
+                if(turn === "black" && (playerNumber == 1) && boardArr[ycell][xcell] == 1 ){
                     highlightPath(xcell,ycell);
                 }
-                if(turn === "white" && (boardArr[ycell][xcell]==2 || boardArr[ycell][xcell]==3)){
+                if(turn === "white" && (playerNumber == 2) && (boardArr[ycell][xcell]==2 || boardArr[ycell][xcell]==3)){
                     if(boardArr[ycell][xcell] == 2){
                         highlightPath(xcell,ycell);
                     }
@@ -229,21 +230,33 @@ function selectPiece(event){
 
 function postAnnouncement(){
     var update;
-    if(turn ==="white"){
-        update = document.getElementById("player2").getElementsByClassName("update")[0];
+    // 1 is black, 2 is white
+    if(playerNumber == 1 && turn == "black") {
+        update = document.getElementById("player1").getElementsByClassName("update")[0];
         update.innerHTML = "your turn";
+    }
+    if(playerNumber == 2 && turn == "black") {
+         update = document.getElementById("player2").getElementsByClassName("update")[0];
+        update.innerHTML = "black turn";
+    }
+    if(playerNumber == 1 && turn == "white") {
         update = document.getElementById("player1").getElementsByClassName("update")[0];
         update.innerHTML = "white turn";
-        
     }
-    if(turn==="black"){
-        update = document.getElementById("player1").getElementsByClassName("update")[0];
-        update.innerHTML = "your turn";
+    if(playerNumber == 2 && turn == "white") {
         update = document.getElementById("player2").getElementsByClassName("update")[0];
-        update.innerHTML = "black turn";
-        
+        update.innerHTML = "your turn";
     }
+    
 }
+
+function displayTurn() {
+    update = document.getElementById("player1").getElementsByClassName("update")[0];
+    update.innerHTML = "your turn";
+    update = document.getElementById("player2").getElementsByClassName("update")[0];
+    update.innerHTML = "black turn";
+}
+
 
 function movePiece(x,y,currentpiece){
     var oldx = currentpiece[0];
