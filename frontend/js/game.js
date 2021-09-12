@@ -209,8 +209,8 @@ function selectPiece(event){
         }
     }else{
         var colormatch = matchColor(x, y);
-        if(colormatch) {
-            movePiece(xcell,ycell,currentpiece);
+        if(colormatch && pieceselected) {
+            movePiece(xcell,ycell);
         }
         else{ // if user has clicked on another piece, retrieve new coordinates
                 coord = getCursorPosition(event); 
@@ -266,9 +266,9 @@ function displayTurn() {
 }
 
 
-function movePiece(x,y,currentpiece){
-    var oldx = currentpiece[0];
-    var oldy = currentpiece[1];
+function movePiece(x,y){
+    var oldx = pieceselected.x;
+    var oldy = pieceselected.y;
     if (boardArr[oldy][oldx] == 1){
         boardArr[y][x] = 1;
         //boardArr[oldy][oldx] = 0;
@@ -290,7 +290,7 @@ function movePiece(x,y,currentpiece){
 
 function highlightPath(x,y) {
     drawSquares();
-    pieceselected = true;
+    pieceselected = {x, y};
     var xcount = x;
     var ycount = y;
     if(xcount != 0 ) { 
@@ -349,7 +349,7 @@ function highlightPath(x,y) {
 
  function highlightKingPath(x,y) {
     drawSquares();
-    pieceselected = true;
+    pieceselected = {x, y};
     var xcount = x;
     var ycount = y;
     if(xcount != 0 ) { 
