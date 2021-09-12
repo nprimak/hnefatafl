@@ -271,15 +271,12 @@ function movePiece(x,y){
     var oldy = pieceselected.y;
     if (boardArr[oldy][oldx] == 1){
         boardArr[y][x] = 1;
-        //boardArr[oldy][oldx] = 0;
     }
     if (boardArr[oldy][oldx] == 2){
         boardArr[y][x] = 2;
-        //boardArr[oldy][oldx] = 0;
     }
     if (boardArr[oldy][oldx] == 3){
         boardArr[y][x] = 3;
-        //boardArr[oldy][oldx] = 0;
     }
     boardArr[oldy][oldx] = 0;
     socket.emit('newTurn', JSON.stringify({boardArray: boardArr, roomName: startGameCode}));

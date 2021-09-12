@@ -58,10 +58,10 @@ io.on('connection', client => {
 
     function handleTurn(data) {
         currentState = JSON.parse(data);
-        console.log("currentState", currentState);
+        //console.log("currentState", currentState);
 
         const gameoverData = checkGameOver(currentState.boardArray);
-        console.log("gameover", gameoverData);
+        //console.log("gameover", gameoverData);
 
         if(!gameoverData.gameover) {
             if(state[currentState.roomName].turn === "black"){
