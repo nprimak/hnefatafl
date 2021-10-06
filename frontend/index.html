@@ -1,5 +1,8 @@
 <html>
     <head>
+        <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
+<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -56,10 +59,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                    
                 </div>
                 <div id="start">
-                    <button id="create-game" class="btn">Create New Game</button></br>
+
+                    <button id="facebook">Login with Facebook</button>
+                    <div id="sign-in-status"></div>
+                    <div id="sign-in"></div>
+                    <pre id="account-details"></pre>
+                    <!-- <button id="create-game" class="btn">Create New Game</button></br>
                     <span>OR</span></br></br>
                     <input id="room-code" type="text" placeholder="Enter Room Code"/></br>
-                    <button id="join-game" class="btn">Join Existing Game</button>
+                    <button id="join-game" class="btn">Join Existing Game</button> -->
                 </div>
             
             </div>
@@ -81,5 +89,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
 </body>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-   <script src="./js/game.js"></script>
+    <script src="./js/initSDK.js" type="module"></script>
+   <!-- <script src="./js/game.js"></script> -->
 </html>
