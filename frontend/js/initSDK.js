@@ -101,4 +101,4 @@ function readUserData(userId) {
 
 
 
-
+export {db};
