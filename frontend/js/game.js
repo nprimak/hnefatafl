@@ -19,6 +19,7 @@ const startScreen = document.getElementById('start')
 const roomCodeIdDisplay = document.getElementById('room-code-id')
 const waitingScreen = document.getElementById('waiting')
 
+
 joinGameBtn.addEventListener('click', joinGame)
 createGameBtn.addEventListener('click', newGame)
 
@@ -54,10 +55,6 @@ var currentpiece; //coordinates of piece which is currentl selected
 var round = 1;
 var gameover = false;
 
-function showWaitingScreen() {
-    waitingScreen.style.display = "inline"
-    startScreen.style.display = "none"
-}
 
 
 function showGameScreen() {
@@ -67,21 +64,6 @@ function showGameScreen() {
 
 function handleInit(number) {
     playerNumber = number;
-}
-
-function handleGameCode(gameCode) {
-    roomCodeIdDisplay.innerText = gameCode;
-    showWaitingScreen();
-}
-
-function handleUnknownGame() {
-    reset()
-    alert("Unknown Game Code")
-}
-
-function handleTooManyPlayers() {
-    reset()
-    alert("Game Already in Progress")
 }
 
 function handleBoardStart(gameData) {

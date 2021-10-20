@@ -1,9 +1,6 @@
 <html>
     <head>
-        <script src="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.js"></script>
-<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
 
-<link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.8.1/firebase-ui-auth.css" />
 <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -55,17 +52,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div id="center">
 
                 <div id="waiting" style="display:none">
-                    <h2>Your Room Code is <span id="room-code-id"></span> </h2>
-                    <h3>Waiting for Second Player...</h3>
+                    <button>Create New Game</button>
+                    <div id="lobby">
+                        <ul id="lobby-table">
+                            <template id="lobby-item"><li class="row"><img><span></span><button class="join-game">Join Game</button></li></template>
+                        </ul>
+                    </div>
+                   
+                    
                    
                 </div>
-                <div id="start" style="color:white">
-
+                <div id="start" >
                     <button id="facebook">Facebook Login</button>
-                    <!-- <button id="create-game" class="btn">Create New Game</button></br>
-                    <span>OR</span></br></br>
-                    <input id="room-code" type="text" placeholder="Enter Room Code"/></br>
-                    <button id="join-game" class="btn">Join Existing Game</button> -->
                 </div>
             
             </div>
@@ -84,7 +82,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
     <img id="wood" width="600" height="600" src="./images/background.jpg" style="display:none">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
         <script src="./js/initSDK.js" type="module"></script>
         <script src="./js/initDB.js" type="module"></script>
 </body>

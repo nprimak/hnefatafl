@@ -1,0 +1,27 @@
+{
+    "rooms": {
+        "XYZ10": {
+            "player1": "player1UID",
+            "player2": "player2UID",
+            "gameBoard": [0,1,0,1,0,0,0],
+            "currentTurn": "player1",
+            "expirationTime": "UTC_TIMESTAMP",
+            "winner": "player1"
+        }
+    },
+    "users": {
+        "player1UID": {
+            "inGame": "false",
+            "displayName": "Elf Boy",
+            "email": "123@gmail.com",
+            "photoURL": "url"
+        },
+        "player2UID" : {
+            "inGame": "true",
+            "gameCode": "XYZ10",
+            "displayName": "Elf Boy",
+            "email": "123@gmail.com",
+            "photoURL": "url"
+        }
+    }
+}

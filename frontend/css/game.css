@@ -1,20 +1,20 @@
-        body {
-            background-color:black;
-            font-family:sans-serif;
-            background-position: top;
-            margin: 0px;
-            padding: 0px;
-        }
-        h1{
-            font-family: 'IM Fell English', serif;
-             text-transform:uppercase;  
-            font-size: 37px;
-            padding:0;
-            margin:10px;
-            color: #D8A46B;
-            
-     
-        }
+body {
+    background-color:black;
+    font-family:sans-serif;
+    background-position: top;
+    margin: 0px;
+    padding: 0px;
+}
+h1{
+    font-family: 'IM Fell English', serif;
+        text-transform:uppercase;  
+    font-size: 37px;
+    padding:0;
+    margin:10px;
+    color: #D8A46B;
+    
+
+}
 
 h1 a{
     text-decoration: none;
@@ -301,6 +301,39 @@ h1 a{
     background: #7a340d;
     
 }
+
+#lobby-table {
+    background-color: black;
+    width: 80%;
+    margin: 0 auto;
+    border: 1px solid #7a340d;
+    list-style-type: none;
+    padding: 0px;
+}
+
+#lobby-table .row {
+    border-bottom: 1px solid #7a340d;
+    height: 50px;
+}
+
+#lobby-table .row img {
+    float: left;
+    margin-left: 0px;
+    
+}
+
+#lobby-table .row span {
+    float: left;
+    margin-top: 15px;
+    margin-left: 10px;
+}
+
+#lobby-table .row .join-game {
+    float: right;
+    margin: 5px;
+}
+
+
 
 input    {
 width:200px;
