@@ -32,57 +32,76 @@ const app = initializeApp(config);
 const auth = getAuth(app);
 const db = getDatabase();
 const dbRef = ref(getDatabase());
+let user;
 
 console.log("db", db);
 
 const facebookButton = document.querySelector('#facebook');
+const googleButton = document.querySelector('#google');
+const lobbyScreen = document.getElementById('lobby');
 const waitingScreen = document.getElementById('waiting');
 const startScreen = document.getElementById('start');
+const createGameButton = document.getElementById('create-game');
 
 facebookButton.onclick = () => {
   facebookSignIn();
 }
 
+
+googleButton.onclick = () => {
+  googleSignIn();
+}
+
+
+createGameButton.onclick = () => {
+  createNewGameRoom(makeid(), user.uid);
+}
+
 function showWaitingScreen() {
-  waitingScreen.style.display = "inline"
+  waitingScreen.style.display = "block"
   startScreen.style.display = "none"
 }
 
+function showLobbyScreen() {
+  displayGameLobby();
+  lobbyScreen.style.display = "inline"
+  startScreen.style.display = "none"
+}
+function googleSignIn() {
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider)
+  .then((result) => {
+    // This gives you a Google Access Token. You can use it to access the Google API.
+    const credential = GoogleAuthProvider.credentialFromResult(result);
+    const token = credential.accessToken;
+    // The signed-in user info.
+    user = result.user;
+    completeLogIn();
+    // ...
+  }).catch((error) => {
+    // Handle Errors here.
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // The email of the user's account used.
+    const email = error.email;
+    // The AuthCredential type that was used.
+    const credential = GoogleAuthProvider.credentialFromError(error);
+    // ...
+  });
+}
 
 function facebookSignIn() {
   const provider = new FacebookAuthProvider();
   signInWithPopup(auth, provider)
   .then((result) => {
 
-    showWaitingScreen();
     // The signed-in user info.
-    const user = result.user;
-
+    user = result.user;
+    completeLogIn();
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     const credential = FacebookAuthProvider.credentialFromResult(result);
     const accessToken = credential.accessToken;
-    readUserData(user.uid).then((result) => {
-      if(!result) {
-        console.log("user", user);
-        writeUserData(user.uid, user.displayName, user.email, user.photoURL);
-        
-      } else {
-        if(result.room_id) {
-          console.log("player has a room");
-          // check if another player has joined their game
-          readGameData(result.room_id).then((roomData) => {
-            console.log(roomData);
-            if(!roomData.player2) {
-              //display WAITING FOR SECOND PLAYER 
-              // offer to invite someone? 
-            } else {
-              // load the existing game
-            }
-          })
-        } 
-      
-      }
-    });
+    
     
     // ...
   })
@@ -100,6 +119,37 @@ function facebookSignIn() {
 
 }
 
+
+function completeLogIn() {
+  readUserData(user.uid).then((result) => {
+    if(!result) {
+      console.log("user", user);
+      writeUserData(user.uid, user.displayName, user.email, user.photoURL);
+      showLobbyScreen();
+    } else {
+      console.log("result", result);
+      if(result.room_id) {
+        console.log("player has a room");
+        // check if another player has joined their game
+        readGameData(result.room_id).then((roomData) => {
+          console.log(roomData);
+          if(!roomData.player2) {
+            showWaitingScreen();
+            //display WAITING FOR SECOND PLAYER 
+            // offer to invite someone? 
+          } else {
+            // load the existing game
+          }
+        })
+      } else {
+        //no room id
+        showLobbyScreen();
+      }
+    
+    }
+  });
+}
+
 function displayGameLobby() {
   // need code to fetch list of gameRooms from db that don't have a player2 
   get(child(dbRef, `rooms/`)).then((snapshot) => {
@@ -108,12 +158,14 @@ function displayGameLobby() {
       const roomKeys = Object.keys(rooms);
       const lobbyRow = document.getElementById("lobby-item");
       const lobbyTable = document.getElementById("lobby-table");
-      roomKeys.forEach((key, index) => {
+      roomKeys.forEach((key) => {
         console.log("index", rooms[key]);
         let lobbyRowClone = lobbyRow.content.cloneNode(true);
-        readUserData(rooms[key].player1).then(user => {
-          lobbyRowClone.querySelector('img').src = user.profile_picture;
-          lobbyRowClone.querySelector('span').innerHTML = "Play against " + user.username; //TODO change to nickname 
+        readUserData(rooms[key].player1).then(player => {
+          lobbyRowClone.querySelector('img').src = player.profile_picture;
+          lobbyRowClone.querySelector('span').innerHTML = "Play against " + player.username; //TODO change to nickname 
+          console.log("key", key);
+          lobbyRowClone.querySelector('button').onclick = () => { joinExistingGameRoom(key, user.uid) };
           lobbyTable.appendChild(lobbyRowClone)
         })
       })
@@ -164,6 +216,16 @@ function readGameData(roomId) {
     });
   }
 
+  function joinExistingGameRoom(roomId, userId) {
+    update(ref(db, 'users/' + userId), {
+      room_id: roomId
+    })
+    update(ref(db, 'rooms/' + roomId), {
+      player2: userId
+    });
+    //TODO: add notification to player1 that game has begun
+  }
+
   function createNewGameRoom(roomId, userId) {
     update(ref(db, 'users/' + userId), {
       room_id: roomId
@@ -176,9 +238,6 @@ function readGameData(roomId) {
     });
   }
 
-  function updateGameRoomForPlayer() {
-
-  }
 
   function makeid() {
     var result = '';
@@ -209,7 +268,6 @@ function createBoardArray(){
    return boardArr;     
 }
 
-displayGameLobby()
 
 
 

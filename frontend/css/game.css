@@ -123,6 +123,8 @@ h1 a{
         #waiting {
             color:rgba(242, 192, 64);
             text-align:center;
+            font-size: 30px;
+            padding-top: 50px;
         }
 
         #waiting h3{ 
@@ -309,6 +311,7 @@ h1 a{
     border: 1px solid #7a340d;
     list-style-type: none;
     padding: 0px;
+    color: #ffd266;
 }
 
 #lobby-table .row {
