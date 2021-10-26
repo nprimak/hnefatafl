@@ -1,4 +1,4 @@
-import { db, user, readUserData } from './initSDK.js'
+import { db, user, readUserData, leaveGameRoom } from './initSDK.js'
 import { checkCapture, checkGameOver } from './logic.js';
 import {ref, update, onValue} from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
 
@@ -30,6 +30,9 @@ var piecesize = squaresize/2.4; //the radius of the checkers
 var pieceselected = false; //whether a piece is currently selected or not
 var currentpiece; //coordinates of piece which is currentl selected
 var gameover = false;
+let boardUpdateRef;
+let boardUpdateListener; 
+
 
 
 
@@ -37,7 +40,7 @@ var gameover = false;
 function displayPlayerData(player2, player1) {
     const player1element = document.getElementById("player1");
     const player2element = document.getElementById("player2");
-    console.log("user", user);
+    //console.log("user", user);
     if(user.uid === player2) {
         playerNumber = 2;
         readUserData(player1).then((playerData) => {
@@ -59,29 +62,35 @@ function displayPlayerData(player2, player1) {
 }
 
 
-function listenForBoardUpdates() {
-    const dbRef = ref(db, 'rooms/' + startGameCode );
-    onValue(dbRef, (snapshot) => {
-      const data = snapshot.val();
-      handleBoardUpdate(data, startGameCode)
-    });
+
+
+function listenForBoardUpdates(on = true) {
+    if(on) {
+       boardUpdateListener = onValue(boardUpdateRef, (snapshot) => {
+            const data = snapshot.val();
+            handleBoardUpdate(data, startGameCode)
+         });
+    } else {
+       boardUpdateListener();
+    }
 }
 
 
 const handleInit = (gameData, roomName) => {
     startGameCode = roomName; 
+    boardUpdateRef = ref(db, 'rooms/' + startGameCode );
+    displayPlayerData(gameData.player2, gameData.player1);
     handleBoardUpdate(gameData);
     listenForBoardUpdates();
+    handleGameOver({winner: "white"});
 }
 
 
 const handleBoardUpdate = (gameData) => {
-    console.log("received game start", gameData)
-    //refactor so there is a handleBoardStart so we aren't re displaying each time (unecessary)
-    displayPlayerData(gameData.player2, gameData.player1);
+   // console.log("received game start", gameData)
     boardArr = gameData.board;
-    console.log("boardArr", boardArr);
-    turn = gameData.turn || "black";
+    //console.log("boardArr", boardArr);
+    turn = gameData.turn;
     drawSquares()
     drawPieces()
 }
@@ -89,6 +98,8 @@ const handleBoardUpdate = (gameData) => {
 function handleGameOver(gameOverData) {
     gameover = true;
     displayFinalMessage(gameOverData.winner)
+    listenForBoardUpdates(false);
+    leaveGameRoom(user.uid, startGameCode, playerNumber);
 }
 
 
@@ -174,7 +185,7 @@ function selectPiece(event){
     var y = coord[1];
     var xcell = Math.floor(x/squaresize) ;
     var ycell = Math.floor(y/squaresize) ;
-    console.log("select piece function player number", playerNumber);
+    //console.log("select piece function player number", playerNumber);
     //console.log(xlocation);
     //console.log(ylocation);
     if(pieceselected == false){

@@ -8,7 +8,7 @@ import { handleInit } from './game.js'
 // Add Firebase products that you want to use
 import { getAuth, signInWithPopup, onAuthStateChanged, GoogleAuthProvider, FacebookAuthProvider} from 'https://www.gstatic.com/firebasejs/9.1.1/firebase-auth.js'
 
-import { getDatabase, ref, set, get, child, update, query } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
+import { getDatabase, ref, set, get, child, update, remove, onValue } from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -227,6 +227,27 @@ function readGameData(roomId) {
     });
   }
 
+  function leaveGameRoom(userId, roomId, playerNumber) {
+    update(ref(db, 'users/' + userId), {
+      room_id: null
+    })
+    if(playerNumber === 1) {
+      update(ref(db, 'rooms/' + roomId), {
+        player1: null
+      });
+    } else {
+      update(ref(db, 'rooms/' + roomId), {
+        player2: null
+      });
+    }
+    //delete room if both players have left
+    readGameData(roomId).then(data => {
+      if(!data.player1 && !data.player2) {
+        remove(ref(db, 'rooms/' + roomId))
+      }
+    })
+  }
+
   function joinExistingGameRoom(roomId, userId) {
     update(ref(db, 'users/' + userId), {
       room_id: roomId
@@ -282,4 +303,4 @@ function createBoardArray(){
 
 
 
-export {db, user, readUserData};
+export {db, user, readUserData, leaveGameRoom};
