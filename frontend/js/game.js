@@ -1,36 +1,14 @@
-
-const socket = io('http://localhost:3000');
-
-
-
-socket.on('init', handleInit)
-socket.on('gameCode', handleGameCode)
-socket.on('unknownGame', handleUnknownGame)
-socket.on('tooManyPlayers', handleTooManyPlayers)
-socket.on('gameStart', handleBoardStart)
-socket.on('boardUpdate', handleBoardUpdate)
-socket.on('gameOver', handleGameOver)
-
-const joinGameBtn = document.getElementById('join-game')
-const createGameBtn = document.getElementById('create-game')
-const roomCodeInput = document.getElementById('room-code')
-const initialScreen = document.getElementById('center')
-const startScreen = document.getElementById('start')
-const roomCodeIdDisplay = document.getElementById('room-code-id')
-const waitingScreen = document.getElementById('waiting')
+import { db, user, readUserData } from './initSDK.js'
+import { checkCapture, checkGameOver } from './logic.js';
+import {ref, update, onValue} from "https://www.gstatic.com/firebasejs/9.1.1/firebase-database.js"
 
 
-joinGameBtn.addEventListener('click', joinGame)
-createGameBtn.addEventListener('click', newGame)
 
-function newGame() {
-    socket.emit('newGame');
-}
+// socket.on('init', handleInit)
+// socket.on('gameStart', handleBoardStart)
+// socket.on('boardUpdate', handleBoardUpdate)
+// socket.on('gameOver', handleGameOver)
 
-function joinGame() {
-    const code = roomCodeInput.value;
-    socket.emit('joinGame', code);
-}
 
 screen.orientation.lock('portrait')
 
@@ -38,8 +16,7 @@ let startGameCode;
 let playerNumber;
 let boardArr; //array holding all current locations of pieces
 let turn;
-var firstload = true;
-var stage = document.getElementById("stage");
+const stage = document.getElementById('canvas');
 var ctx = stage.getContext("2d");
 if( document.body.clientWidth > 320) {
     stage.width = 320;
@@ -52,42 +29,66 @@ var squaresize = stage.width/11; //size of the squares on the board
 var piecesize = squaresize/2.4; //the radius of the checkers
 var pieceselected = false; //whether a piece is currently selected or not
 var currentpiece; //coordinates of piece which is currentl selected
-var round = 1;
 var gameover = false;
 
 
 
-function showGameScreen() {
-    initialScreen.style.display = 'none';
-    stage.style.display = 'block';
+// need to show image + name of each player 
+function displayPlayerData(player2, player1) {
+    const player1element = document.getElementById("player1");
+    const player2element = document.getElementById("player2");
+    console.log("user", user);
+    if(user.uid === player2) {
+        playerNumber = 2;
+        readUserData(player1).then((playerData) => {
+            player1element.querySelector('h2').innerHTML = playerData.username; 
+            player1element.querySelector('img').src = playerData.profile_picture;
+            player2element.querySelector('h2').innerHTML = user.displayName; 
+            player2element.querySelector('img').src = user.photoURL;
+        })
+    } else {
+        playerNumber = 1;
+        readUserData(player2).then((playerData) => {
+            player1element.querySelector('h2').innerHTML = user.displayName; 
+            player1element.querySelector('img').src = user.photoURL;
+            player2element.querySelector('h2').innerHTML = playerData.username; 
+            player2element.querySelector('img').src = playerData.profile_picture;
+        })
+    }
+  
 }
 
-function handleInit(number) {
-    playerNumber = number;
+
+function listenForBoardUpdates() {
+    const dbRef = ref(db, 'rooms/' + startGameCode );
+    onValue(dbRef, (snapshot) => {
+      const data = snapshot.val();
+      handleBoardUpdate(data, startGameCode)
+    });
 }
 
-function handleBoardStart(gameData) {
-    showGameScreen();
+
+const handleInit = (gameData, roomName) => {
+    startGameCode = roomName; 
     handleBoardUpdate(gameData);
+    listenForBoardUpdates();
 }
 
-function handleBoardUpdate(gameData) {
-    console.log("received game start")
-    const data = JSON.parse(gameData);
-    console.log("data", data);
-    console.log("gamecode", data.roomName);
-    startGameCode = data.roomName; 
-    boardArr = data.boardArray;
+
+const handleBoardUpdate = (gameData) => {
+    console.log("received game start", gameData)
+    //refactor so there is a handleBoardStart so we aren't re displaying each time (unecessary)
+    displayPlayerData(gameData.player2, gameData.player1);
+    boardArr = gameData.board;
     console.log("boardArr", boardArr);
-    turn = data.turn;
+    turn = gameData.turn || "black";
     drawSquares()
     drawPieces()
 }
 
 function handleGameOver(gameOverData) {
-    const data = JSON.parse(gameOverData)
     gameover = true;
-    displayFinalMessage(data.winner, data.gameovermessage)
+    displayFinalMessage(gameOverData.winner)
 }
 
 
@@ -100,8 +101,8 @@ function drawSquares(){
     ctx.drawImage(img, 0, 0);
     ctx.fillRect(0,0, stage.width, stage.height);
     ctx.globalAlpha=1;
-    for(i = 0; i <= 10 ; i++){
-        for(j=0; j <=10 ; j++) {
+    for(let i = 0; i <= 10 ; i++){
+        for(let j=0; j <=10 ; j++) {
             ctx.rect(0+j*squaresize,0+i*squaresize, squaresize, squaresize);
             //ctx.stroke();
             if( (j==0 && i == 0) || (j==10 && i ==0) || (j==0 && i==10) || (j==10 && i ==10)){
@@ -114,7 +115,7 @@ function drawSquares(){
                 ctx.lineTo(0+j*squaresize,0+i*squaresize+squaresize);
                 ctx.stroke();
             }
-            if( j == 5 && i == 5){
+            if(j == 5 && i == 5){
                 ctx.fillStyle = '#6f3823';
                 ctx.fillRect(0+j*squaresize,0+i*squaresize, squaresize, squaresize);
                
@@ -122,15 +123,13 @@ function drawSquares(){
             ctx.stroke();
         }
     }
-    if(firstload== true){
-        firstload = false;
-    }
+
 }
 
 function drawPieces(){
     postAnnouncement();
-     for(i = 0; i <= 10 ; i++){
-        for(j=0; j <=10 ; j++) {
+     for(let i = 0; i <= 10 ; i++){
+        for(let j=0; j <=10 ; j++) {
             if(boardArr[i][j] == 1) {
                     //ctx.arc(x, y, radius, startAngle, endAngle, anticlockwise);
                     ctx.beginPath();
@@ -223,30 +222,15 @@ function selectPiece(event){
 function postAnnouncement(){
     var update;
     // 1 is black, 2 is white
-    if(playerNumber == 1 && turn == "black") {
+    if(turn == "black") {
         update = document.getElementById("player1").getElementsByClassName("update")[0];
         update.innerHTML = "your turn";
     }
-    if(playerNumber == 2 && turn == "black") {
+    if(turn == "white") {
          update = document.getElementById("player2").getElementsByClassName("update")[0];
-        update.innerHTML = "black turn";
-    }
-    if(playerNumber == 1 && turn == "white") {
-        update = document.getElementById("player1").getElementsByClassName("update")[0];
-        update.innerHTML = "white turn";
-    }
-    if(playerNumber == 2 && turn == "white") {
-        update = document.getElementById("player2").getElementsByClassName("update")[0];
         update.innerHTML = "your turn";
     }
     
-}
-
-function displayTurn() {
-    update = document.getElementById("player1").getElementsByClassName("update")[0];
-    update.innerHTML = "your turn";
-    update = document.getElementById("player2").getElementsByClassName("update")[0];
-    update.innerHTML = "black turn";
 }
 
 
@@ -255,15 +239,24 @@ function movePiece(x,y){
     var oldy = pieceselected.y;
     if (boardArr[oldy][oldx] == 1){
         boardArr[y][x] = 1;
+        turn = "white";
     }
     if (boardArr[oldy][oldx] == 2){
         boardArr[y][x] = 2;
+        turn = "black";
     }
     if (boardArr[oldy][oldx] == 3){
         boardArr[y][x] = 3;
+        turn = "black";
     }
+    boardArr = checkCapture(boardArr, turn);
     boardArr[oldy][oldx] = 0;
-    socket.emit('newTurn', JSON.stringify({boardArray: boardArr, roomName: startGameCode}));
+    const gameOverData = checkGameOver(boardArr);
+    if(gameOverData.gameover) {
+        handleGameOver(gameOverData);
+    } else {
+        updateBoard();
+    }
     pieceselected = false;
     
 }
@@ -281,7 +274,7 @@ function highlightPath(x,y) {
             }
             else {
                 xcount--;
-                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize, squaresize);
+                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize);
             }
         }
     }
@@ -293,7 +286,7 @@ function highlightPath(x,y) {
             }
             else {
                 xcount++;
-                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize, squaresize);
+                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize);
             } 
         }
     }
@@ -304,7 +297,7 @@ function highlightPath(x,y) {
             }
             else {
                 ycount++;
-                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize, squaresize);
+                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize);
             } 
         }
     }
@@ -316,7 +309,7 @@ function highlightPath(x,y) {
             }
             else {
                 ycount--;
-                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize, squaresize);
+                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize);
             } 
         }
     }
@@ -340,7 +333,7 @@ function highlightPath(x,y) {
             }
             else {
                 xcount--;
-                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize, squaresize);
+                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize);
             }
         }
     }
@@ -352,7 +345,7 @@ function highlightPath(x,y) {
             }
             else {
                 xcount++;
-                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize, squaresize);
+                colorPath(0+xcount*squaresize,0+y*squaresize, squaresize);
             } 
         }
     }
@@ -363,7 +356,7 @@ function highlightPath(x,y) {
             }
             else {
                 ycount++;
-                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize, squaresize);
+                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize);
             } 
         }
     }
@@ -375,7 +368,7 @@ function highlightPath(x,y) {
             }
             else {
                 ycount--;
-                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize, squaresize);
+                colorPath(0+x*squaresize,0+ycount*squaresize, squaresize);
             } 
         }
     }
@@ -399,7 +392,7 @@ function matchColor(x,y){
     }
 }
 
-function colorPath(x,y,size,size) {
+function colorPath(x,y,size) {
     //ctx.lineWidth=2;
     ctx.fillStyle = "#a95e39";
     ctx.fillRect(x,y, size, size);
@@ -429,31 +422,45 @@ function getCursorPosition(event){
 }
 
 
-function displayFinalMessage(message,winner){
+function displayFinalMessage(winner){
     ctx.fillStyle = 'rgba(0,0,0,0.5)';
     ctx.fillRect(0,0,stage.width,stage.height);
-    ctx.font = "700 40pt IM Fell English";
+    ctx.font = "700 60pt IM Fell English";
     ctx.fillStyle = '#d0975e';
     ctx.lineWidth = 4;
-    ctx.strokeStyle = 'black';
-    ctx.strokeText(message, 60, 250);
-    ctx.fillText(message, 60, 250);
+    ctx.strokeStyle = '#000000';
+    ctx.strokeText("Over", 60, 250);
+    ctx.fillText("Over", 60, 250);
     ctx.font = "700 60pt IM Fell English";
     ctx.lineWidth = 4;
-    ctx.strokeText("Winner is "+winner+"!", 35,100);
-    ctx.fillText("Winner is "+winner+"!", 35,100);
+    ctx.strokeText("Game", 50,100);
+    ctx.fillText("Game", 50,100);
     stage.removeEventListener("click", selectPiece);
+    var update;
+    if(winner === "black") {
+        update = document.getElementById("player1").getElementsByClassName("update")[0];
+        update.innerHTML = "winner!";
+        update = document.getElementById("player2").getElementsByClassName("update")[0];
+        update.innerHTML = "";
+    }
+    if(winner === "white") {
+        update = document.getElementById("player2").getElementsByClassName("update")[0];
+        update.innerHTML = "winner!";
+        update = document.getElementById("player1").getElementsByClassName("update")[0];
+        update.innerHTML = "";
+    }
 
 }
 
-function reset() {
-    playerNumber = null;
-    roomCodeInput.value = "";
-    roomCodeIdDisplay.innerText = "";
-    initialScreen.style.display = 'inline';
-    waitingScreen.style.display = 'none';
-    startScreen.style.dispkay = 'inline';
+
+function updateBoard() {
+    update(ref(db, 'rooms/' + startGameCode), {
+        board: boardArr,
+        turn: turn
+    });
 }
 
 
 stage.addEventListener("click", selectPiece, false);
+
+export {handleInit};

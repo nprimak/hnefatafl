@@ -42,13 +42,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div id="topbar">
                  <header><h1><a href="./index.html">hnefatafl</a></h1></header>
             </div>
-            <div id="player1" class="sidebar">
-                <div class="avatar">
-                    <!-- <img src="../images/avatars/<?php echo $p1avatar; ?>.png"> -->
-                </div>
-                <h2>Player One</h2> 
-                <div class="update"></div>
-            </div>
             <div id="center">
                 <div id="waiting" style="display:none">
                     WAITING FOR PLAYER 2
@@ -64,16 +57,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                 <div id="start" >
                     <button id="facebook">Facebook Login</button>
                     <button id="google">Google Login</button>
+                    <p id="login-error"></p>
+                </div>
+                <div id="stage">
+                    <div id="player1" class="sidebar">
+                        <div class="avatar">
+                            <img src=""> 
+                        </div>
+                        <h2>Player One</h2> 
+                        <div class="update"></div>
+                    </div>
+                    <canvas id="canvas" width="400" height="400">Your browser does not support HTML5 Canvas Element.     </canvas>
+                    <div id="player2" class="sidebar">
+                        <div class="update"></div>
+                        <div class="avatar">
+                            <img src=""> 
+                        </div>
+                        <h2>Player Two</h2>
+                    </div>
+
                 </div>
             
-            </div>
-            <canvas id="stage" width="400" height="400" style="display:none">Your browser does not support HTML5 Canvas Element.     </canvas>
-            <div id="player2" class="sidebar">
-                <div class="update"></div>
-                <div class="avatar">
-                    <!-- <img src="../images/avatars/<?php echo $p2avatar; ?>.png"> -->
-                </div>
-                <h2>Player Two</h2>
             </div>
         </div>
           <div id="bottombar">
@@ -83,7 +87,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <img id="wood" width="600" height="600" src="./images/background.jpg" style="display:none">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
         <script src="./js/initSDK.js" type="module"></script>
-        <script src="./js/initDB.js" type="module"></script>
+        <script src="./js/game.js" type="module"></script>
 </body>
 
    <!-- <script src="./js/game.js"></script> -->

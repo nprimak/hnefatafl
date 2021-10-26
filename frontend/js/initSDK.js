@@ -1,5 +1,6 @@
 import {API_KEY, AUTH_DOMAIN, PROJECT_ID, STORAGE_BUCKET, MESSAGING_SENDER_ID, APP_ID, MEASUREMENT_ID, DATABASE_URL} from '../config.js'
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.1.1/firebase-app.js'
+import { handleInit } from './game.js'
     
 // If you enabled Analytics in your project, add the Firebase SDK for Google Analytics
 //import { analytics } from 'https://www.gstatic.com/firebasejs/9.1.1/firebase-analytics.js'
@@ -34,14 +35,13 @@ const db = getDatabase();
 const dbRef = ref(getDatabase());
 let user;
 
-console.log("db", db);
-
 const facebookButton = document.querySelector('#facebook');
 const googleButton = document.querySelector('#google');
 const lobbyScreen = document.getElementById('lobby');
 const waitingScreen = document.getElementById('waiting');
 const startScreen = document.getElementById('start');
 const createGameButton = document.getElementById('create-game');
+const stage = document.getElementById("stage");
 
 facebookButton.onclick = () => {
   facebookSignIn();
@@ -62,11 +62,18 @@ function showWaitingScreen() {
   startScreen.style.display = "none"
 }
 
+function showGameScreen() {
+  startScreen.style.display = 'none';
+  stage.style.display = 'block';
+}
+
 function showLobbyScreen() {
   displayGameLobby();
   lobbyScreen.style.display = "inline"
   startScreen.style.display = "none"
 }
+
+
 function googleSignIn() {
   const provider = new GoogleAuthProvider();
   signInWithPopup(auth, provider)
@@ -86,6 +93,9 @@ function googleSignIn() {
     const email = error.email;
     // The AuthCredential type that was used.
     const credential = GoogleAuthProvider.credentialFromError(error);
+    document.getElementById("login-error").innerHTML = error.message;
+
+    console.log("error", error);
     // ...
   });
 }
@@ -113,7 +123,8 @@ function facebookSignIn() {
     const email = error.email;
     // The AuthCredential type that was used.
     const credential = FacebookAuthProvider.credentialFromError(error);
-
+    document.getElementById("login-error").innerHTML = error.message;
+    console.log("error", error);
     // ...
   });
 
@@ -129,16 +140,15 @@ function completeLogIn() {
     } else {
       console.log("result", result);
       if(result.room_id) {
-        console.log("player has a room");
         // check if another player has joined their game
         readGameData(result.room_id).then((roomData) => {
           console.log(roomData);
           if(!roomData.player2) {
             showWaitingScreen();
-            //display WAITING FOR SECOND PLAYER 
             // offer to invite someone? 
           } else {
-            // load the existing game
+            showGameScreen();
+            handleInit(roomData, result.room_id)
           }
         })
       } else {
@@ -159,15 +169,18 @@ function displayGameLobby() {
       const lobbyRow = document.getElementById("lobby-item");
       const lobbyTable = document.getElementById("lobby-table");
       roomKeys.forEach((key) => {
-        console.log("index", rooms[key]);
-        let lobbyRowClone = lobbyRow.content.cloneNode(true);
-        readUserData(rooms[key].player1).then(player => {
-          lobbyRowClone.querySelector('img').src = player.profile_picture;
-          lobbyRowClone.querySelector('span').innerHTML = "Play against " + player.username; //TODO change to nickname 
-          console.log("key", key);
-          lobbyRowClone.querySelector('button').onclick = () => { joinExistingGameRoom(key, user.uid) };
-          lobbyTable.appendChild(lobbyRowClone)
-        })
+        //console.log("index", rooms[key]);
+        if(!rooms[key].player2) {
+          let lobbyRowClone = lobbyRow.content.cloneNode(true);
+          readUserData(rooms[key].player1).then(player => {
+            lobbyRowClone.querySelector('img').src = player.profile_picture;
+            lobbyRowClone.querySelector('span').innerHTML = "Play against " + player.username; //TODO change to nickname 
+            console.log("key", key);
+            lobbyRowClone.querySelector('button').onclick = () => { joinExistingGameRoom(key, user.uid) };
+            lobbyTable.appendChild(lobbyRowClone)
+          })
+        }
+     
       })
     
     } else {
@@ -176,12 +189,10 @@ function displayGameLobby() {
   }).catch((error) => {
     console.error(error);
   });
-  // populate a table on the frontend to display gameRooms waiting for a player
-  // have a "join game" button 
 }
 
 
-//reading user data once to check if user exists in the system
+//reading room data once to check if user exists in the system
 function readGameData(roomId) {
   return get(child(dbRef, `rooms/${roomId}`)).then((snapshot) => {
     if (snapshot.exists()) {
@@ -194,7 +205,7 @@ function readGameData(roomId) {
   });
  }
 
- function readUserData(userId) {
+ const readUserData = (userId) => {
  
   return get(child(dbRef, `users/${userId}`)).then((snapshot) => {
     if (snapshot.exists()) {
@@ -234,7 +245,7 @@ function readGameData(roomId) {
       player1: userId,
       player2: null,
       board: createBoardArray(),
-      turn: "white"
+      turn: "black"
     });
   }
 
@@ -271,4 +282,4 @@ function createBoardArray(){
 
 
 
-export {db};
+export {db, user, readUserData};

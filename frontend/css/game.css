@@ -21,87 +21,91 @@ h1 a{
     color: #D8A46B;
 }
 
-        #title{
-            color: burlywood;
-        }
-        #container{
-            max-width:100%;
-            margin: 0px;
-            position:relative;
-        }
-        #canvas-container{
-            display:inline;
-            margin: 0 auto;
-            position:relative;
-        }
-        #stage { 
-            position:relative;
-            border: 2px black solid;
-            text-align: center;
-            margin: 0 auto;
-            display:block;
-            
-        }
+#center #login-error {
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
 
-        #start span {
-            color: burlywood;
-            font-family:  'IM Fell English', serif;
-            font-size: 30px;
-        }
-        #center a{
-            font-size: 40px;
-            color:burlywood;
-            text-decoration: none;
-            text-align: center;
-            line-height: 80px;
-        }
+#title{
+    color: burlywood;
+}
+#container{
+    max-width:100%;
+    margin: 0px;
+    position:relative;
+}
+#canvas-container{
+    display:inline;
+    margin: 0 auto;
+    position:relative;
+}
+#stage { 
+    position:relative;
+    text-align: center;
+    margin: 0 auto;
+    display:none;
+    
+}
 
-        #center a:hover{
-             color: #eee1c2;
-        }
+#start span {
+    color: burlywood;
+    font-family:  'IM Fell English', serif;
+    font-size: 30px;
+}
+#center a{
+    font-size: 40px;
+    color:burlywood;
+    text-decoration: none;
+    text-align: center;
+    line-height: 80px;
+}
+
+#center a:hover{
+        color: #eee1c2;
+}
 
 
-        #center form{
-            padding-top: 30px;
-             font-size: 20px;
-            color:burlywood;
-            text-decoration: none;
-            text-align: center;
-            padding-top:-30px; 
-            margin-top: 0;
-            line-height: 30px;
-        }
-        #center button {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            font-weight: bold;
-            text-transform: uppercase;
-            padding: 10px;
-            background-color: #ffd266;
-            border-width:0px;
-            border-radius: 5px;
-        }
+#center form{
+    padding-top: 30px;
+        font-size: 20px;
+    color:burlywood;
+    text-decoration: none;
+    text-align: center;
+    padding-top:-30px; 
+    margin-top: 0;
+    line-height: 30px;
+}
+#center button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    padding: 10px;
+    background-color: #ffd266;
+    border-width:0px;
+    border-radius: 5px;
+}
 
-        #center button:hover {
-            background-color: #d37f35;
-            cursor: pointer;
-        }
+#center button:hover {
+    background-color: #d37f35;
+    cursor: pointer;
+}
 
-        #center h1{
-            padding-top:15px;
-            font-size: 50px;
-        }
-        #center{
-            display:inline;
-            border: 2px black solid;
-            float:left;
-            height: 400px;
-            overflow-y:scroll;
-            width:100%;
-            text-align:center;
-            background: url(../images/background_darker.jpg);
-            background-size: 100%;
-        }
+#center h1{
+    padding-top:15px;
+    font-size: 50px;
+}
+#center{
+    display:inline;
+    float:left;
+    height: 490px;
+    overflow-y:scroll;
+    width:100%;
+    text-align:center;
+    background: url(../images/background_darker.jpg);
+    background-size: 100%;
+}
 
 #center p{
  text-align:left;
@@ -171,8 +175,9 @@ h1 a{
         }
   
         .avatar img{
-            width:120px;
-            height:120px;
+            width: 70px;
+            height: 70px;
+            border-radius: 100%;
         }
         .avatar {
             height: 70px;
@@ -252,7 +257,7 @@ h1 a{
             padding-right: 10px;
             padding-left: 10px;
             margin-top: 10px;
-            width:100px
+            width:120px
         
         }
         #hidden-table{
