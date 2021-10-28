@@ -195,7 +195,7 @@ function displayGameLobby() {
 }
 
 function checkRoomOccupants(roomId) {
-  roomUpdateListener = onValue(dbRef, `rooms/${roomId}`), (snapshot) => {
+  roomUpdateListener = onValue(ref(db, `rooms/${roomId}`)), (snapshot) => {
     const data = snapshot.val();
     if(data.player2) {
       showGameScreen();
