@@ -82,7 +82,6 @@ const handleInit = (gameData, roomName) => {
     displayPlayerData(gameData.player2, gameData.player1);
     handleBoardUpdate(gameData);
     listenForBoardUpdates();
-    handleGameOver({winner: "white"});
 }
 
 

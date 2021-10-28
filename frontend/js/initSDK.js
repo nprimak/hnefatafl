@@ -54,7 +54,10 @@ googleButton.onclick = () => {
 
 
 createGameButton.onclick = () => {
-  createNewGameRoom(makeid(), user.uid);
+  const roomId = makeid();
+  createNewGameRoom(roomId, user.uid);
+  showWaitingScreen();
+  checkRoomOccupants(roomId)
 }
 
 function showWaitingScreen() {
@@ -191,8 +194,19 @@ function displayGameLobby() {
   });
 }
 
+function checkRoomOccupants(roomId) {
+  roomUpdateListener = onValue(dbRef, `rooms/${roomId}`), (snapshot) => {
+    const data = snapshot.val();
+    if(data.player2) {
+      showGameScreen();
+      handleInit(data, roomId)
+      roomUpdateListener();
+    }
+ };
+}
 
-//reading room data once to check if user exists in the system
+
+//reading room data
 function readGameData(roomId) {
   return get(child(dbRef, `rooms/${roomId}`)).then((snapshot) => {
     if (snapshot.exists()) {
