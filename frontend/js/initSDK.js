@@ -61,12 +61,14 @@ createGameButton.onclick = () => {
 }
 
 function showWaitingScreen() {
-  waitingScreen.style.display = "block"
-  startScreen.style.display = "none"
+  waitingScreen.style.display = "block";
+  lobbyScreen.style.display = "none";
+  startScreen.style.display = "none";
 }
 
 function showGameScreen() {
-  startScreen.style.display = 'none';
+  lobbyScreen.style.display = "none";
+  waitingScreen.style.display = "none";
   stage.style.display = 'block';
 }
 
@@ -176,9 +178,9 @@ function displayGameLobby() {
         if(!rooms[key].player2) {
           let lobbyRowClone = lobbyRow.content.cloneNode(true);
           readUserData(rooms[key].player1).then(player => {
+            document.getElementById('no-rooms').style.display = "none";
             lobbyRowClone.querySelector('img').src = player.profile_picture;
             lobbyRowClone.querySelector('span').innerHTML = "Play against " + player.username; //TODO change to nickname 
-            console.log("key", key);
             lobbyRowClone.querySelector('button').onclick = () => { joinExistingGameRoom(key, user.uid) };
             lobbyTable.appendChild(lobbyRowClone)
           })
@@ -195,14 +197,14 @@ function displayGameLobby() {
 }
 
 function checkRoomOccupants(roomId) {
-  roomUpdateListener = onValue(ref(db, `rooms/${roomId}`)), (snapshot) => {
+  const roomUpdateListener = onValue(ref(db, `rooms/${roomId}`), (snapshot) => {
     const data = snapshot.val();
     if(data.player2) {
       showGameScreen();
       handleInit(data, roomId)
       roomUpdateListener();
     }
- };
+  });
 }
 
 
@@ -269,6 +271,10 @@ function readGameData(roomId) {
     update(ref(db, 'rooms/' + roomId), {
       player2: userId
     });
+    showGameScreen();
+    readGameData(roomId).then(data =>  {
+      handleInit(data, roomId);
+    })
     //TODO: add notification to player1 that game has begun
   }
 
